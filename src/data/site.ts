@@ -9,7 +9,7 @@ export const site = {
     { id: "linkedin", href: "https://www.linkedin.com/in/mamdouh-helmy-487418289/" },
     { id: "instagram", href: "https://www.instagram.com/_mamdouh_helmy_/" },
   ],
-  stats: { years: 2, projects: 6, techs: 12 },
+  stats: { years: 2, projects: 6, techs: 9 },
   tools: ["Next.js", "React", "TypeScript", "JavaScript", "Tailwind CSS", "MongoDB", "Node.js", "Express", "GraphQL"],
   certificates: [
     { issuer: "Code School", ar: "مطوّر Full-stack أول", en: "Senior Full-Stack Developer", sub: "Experience certificate", year: 2025, url: "#", verified: true, preview: "codeschool" },
