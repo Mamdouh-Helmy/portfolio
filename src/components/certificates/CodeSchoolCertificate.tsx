@@ -28,7 +28,7 @@ export function CodeSchoolPage1() {
         <p className={`mt-[5cqw] ${body}`}><b>Date:</b> August 26, 2026 <b>Reference Number:</b> CS-HR-2026-001</p>
         <p className={`mt-[2cqw] ${body}`}><b>To Whom It May Concern,</b></p>
         <p className={`mt-[1.6cqw] ${body}`}>
-          This letter is to certify that <b>Eng. Mamdoh Mostafa</b> was employed at <b>Code School</b> in the capacity of <b>Senior Full-Stack Developer</b> from <b>October 12, 2025</b> to <b>November 1, 2026.</b>
+          This letter is to certify that <b>Eng. Mamdoh Mostafa</b> was employed at <b>Code School</b> in the capacity of <b>Senior Full-Stack Developer</b> from <b>October 12, 2025</b> to <b>Present.</b>
         </p>
         <p className={`mt-[1.6cqw] ${body}`}>
           During his tenure, Eng. Mamdoh was the primary architect and lead developer who built the entire Code School software ecosystem from the ground up. He successfully engineered the platform from a conceptual phase into a massive, fully customized ecosystem that combines an Advanced Learning Management System (LMS), a Mini-ERP, and a Community Portfolio Platform, powering all our operational, academic, and financial workflows through multiple dedicated dashboards.
