@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #FAF5EC;
+  --color-ink: #2B1E16;
+  --color-terra: #C8553D;
+  --color-sand: #E9D8BF;
+}
+@theme inline {
+  --font-display: var(--f-display);
+  --font-note: var(--f-note);
+  --font-body: var(--f-body);
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+html[lang="ar"] { --f-display: var(--font-rakkas), serif; --f-note: var(--font-aref), serif; --f-body: var(--font-messiri), sans-serif; }
+html[lang="en"] { --f-display: var(--font-fraunces), serif; --f-note: var(--font-fraunces), serif; --f-body: var(--font-bricolage), sans-serif; }
+
+/* Lenis (smooth scroll) */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: clip; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+html { scroll-padding-top: 5.5rem; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+@media (min-width: 768px) { html { scroll-padding-top: 6rem; } }
+body { background: var(--color-cream); color: var(--color-ink); font-family: var(--f-body);  overflow-x: clip; }
+::selection { background: var(--color-terra); color: var(--color-cream); }
+
+.dots { background-image: radial-gradient(color-mix(in oklab, var(--color-ink) 18%, transparent) 1px, transparent 1px); background-size: 14px 14px; }
+.weave { background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--color-cream) 7%, transparent) 0 1px, transparent 1px 14px), repeating-linear-gradient(-45deg, color-mix(in oklab, var(--color-cream) 7%, transparent) 0 1px, transparent 1px 14px); }
+.squiggle { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='8'%3E%3Cpath d='M0 4Q6 0 12 4T24 4' fill='none' stroke='%23C8553D' stroke-width='2'/%3E%3C/svg%3E") repeat-x; height: 8px; }
+.marquee { animation: marquee 30s linear infinite; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee-rev { animation: marquee-rev 36s linear infinite; }
+@keyframes marquee-rev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.marquee:hover, .marquee-rev:hover { animation-play-state: paused; }
+:focus-visible { outline: 2px solid var(--color-terra); outline-offset: 3px; }
+
+.input { width: 100%; border-radius: .75rem; background: color-mix(in oklab, var(--color-sand) 55%, transparent); padding: .7rem .9rem; font-size: .9rem; border: 1px solid transparent; }
+.input:focus { border-color: var(--color-terra); outline: none; }
+.input[aria-invalid="true"] { border-color: var(--color-terra); }
+/* 16px على الموبايل عشان iOS ميعملش zoom لما تضغط على الحقل */
+@media (max-width: 767px) { .input { font-size: 16px; } }
+
+.outline-num { color: transparent; -webkit-text-stroke: 1.5px var(--color-terra); }
+.outline-cur { -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.5px currentColor; opacity: .5; }
+.halftone {
+  background-color: #f6dccd;
+  background-image: radial-gradient(rgba(214, 120, 90, 0.38) 1.1px, transparent 1.6px);
+  background-size: 5px 5px;
+}
+.halftone::after {
+  content: none;
+}
+
+/* ---------- Ticket modal ---------- */
+.ticket { --seam: 42.5%; }
+html[lang="ar"] .ticket { --seam: 57.5%; }
+@media (min-width: 768px) {
+  .ticket {
+    -webkit-mask:
+      radial-gradient(circle 15px at var(--seam) 0, #0000 97%, #000) top / 100% 51% no-repeat,
+      radial-gradient(circle 15px at var(--seam) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+    mask:
+      radial-gradient(circle 15px at var(--seam) 0, #0000 97%, #000) top / 100% 51% no-repeat,
+      radial-gradient(circle 15px at var(--seam) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+  }
+}
+
+.sticker { transform: rotate(-9deg); outline: 2px dashed var(--color-cream); outline-offset: 4px; }
+.check-box { border: 2px solid var(--color-ink); border-radius: .4rem .55rem .4rem .6rem; transform: rotate(-3deg); }
+.check-path { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw .45s ease-out forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+/* ---------- Scribble (الأكثر طلبا) ---------- */
+.scribble { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .9s ease-out .3s forwards; }
+
+/* ---------- About: تفاصيل ورقية ---------- */
+.marker {
+  background: linear-gradient(transparent 58%, color-mix(in oklab, var(--color-terra) 38%, transparent) 58% 92%, transparent 92%);
+  -webkit-box-decoration-break: clone; box-decoration-break: clone; padding-inline: .2em;
+}
+.barcode { height: 2rem; background: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 5px, currentColor 5px 6px, transparent 6px 10px, currentColor 10px 13px, transparent 13px 15px); opacity: .55; }
+.paper {
+  background-color: color-mix(in oklab, white 55%, var(--color-cream));
+  background-image: repeating-linear-gradient(transparent 0 calc(2.5rem - 1px), color-mix(in oklab, var(--color-ink) 13%, transparent) calc(2.5rem - 1px) 2.5rem);
+  background-position: 0 2.5rem;
+}
+.stub {
+  --notch: 69%;
+  border-radius: 1.25rem;
+  -webkit-mask:
+    radial-gradient(circle 14px at 0 var(--notch), #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 14px at 100% var(--notch), #0000 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 14px at 0 var(--notch), #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 14px at 100% var(--notch), #0000 97%, #000) right / 51% 100% no-repeat;
+}
+.ticket-cta { --seam: 72%; }
+html[lang="ar"] .ticket-cta { --seam: 28%; }
+@media (min-width: 768px) {
+  .ticket-cta {
+    -webkit-mask:
+      radial-gradient(circle 16px at var(--seam) 0, #0000 97%, #000) top / 100% 51% no-repeat,
+      radial-gradient(circle 16px at var(--seam) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+    mask:
+      radial-gradient(circle 16px at var(--seam) 0, #0000 97%, #000) top / 100% 51% no-repeat,
+      radial-gradient(circle 16px at var(--seam) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+  }
+}
+
+/* ---------- Animations ---------- */
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(48px) scale(.86) rotate(-2.5deg); }
+  60% { opacity: 1; transform: translateY(-8px) scale(1.015) rotate(.4deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pop-out { to { opacity: 0; transform: translateY(28px) scale(.94); } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes icon-pop { from { transform: scale(0) rotate(-120deg); } to { transform: none; } }
+@keyframes swap { from { opacity: 0; transform: translateY(28px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-terra) 60%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 14px transparent; }
+}
+@keyframes stamp-in {
+  0% { opacity: 0; transform: rotate(-6deg) scale(2.2); }
+  60% { opacity: 1; transform: rotate(-6deg) scale(.94); }
+  100% { opacity: 1; transform: rotate(-6deg) scale(1); }
+}
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(40px); -webkit-clip-path: inset(100% 0 0 0 round 1.5rem); clip-path: inset(100% 0 0 0 round 1.5rem); }
+  to { opacity: 1; transform: none; -webkit-clip-path: inset(0 round 1.5rem); clip-path: inset(0 round 1.5rem); }
+}
+@keyframes sheet-out {
+  to { opacity: 0; transform: translateY(24px); -webkit-clip-path: inset(0 0 100% 0 round 1.5rem); clip-path: inset(0 0 100% 0 round 1.5rem); }
+}
+.sheet-in { animation: sheet-in .7s cubic-bezier(.2, .8, .2, 1) both; }
+.sheet-out { animation: sheet-out .3s ease-in both; }
+.stamp-in { animation: stamp-in .5s cubic-bezier(.3, 1, .4, 1) .55s both; }
+
+.modal-fade-in { animation: fade-in .35s ease both; }
+.modal-fade-out { animation: fade-out .32s ease both; }
+.modal-pop-in { animation: pop-in .65s cubic-bezier(.2, .9, .25, 1) both; }
+.modal-pop-out { animation: pop-out .3s ease-in both; }
+.rise { animation: rise .65s cubic-bezier(.2, .8, .2, 1) both; animation-delay: var(--d, 0ms); }
+.icon-pop { animation: icon-pop .8s cubic-bezier(.3, 1.4, .4, 1) .2s both; }
+.swap { animation: swap .7s cubic-bezier(.2, .8, .2, 1) both; }
+.pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp-in { animation: none; transform: rotate(-6deg); }
+  .check-path { animation: none; stroke-dashoffset: 0; }
+  .scribble { animation: none; stroke-dashoffset: 0; }
+  .marquee, .marquee-rev { animation: none; }
+}
+
+
+/* Hero portrait */
+.sun {
+  background: var(--color-terra);
+  background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--color-cream) 10%, transparent) 0 1px, transparent 1px 9px);
+}
+.cutout {
+  filter:
+    drop-shadow(0 0 0 var(--color-cream))
+    drop-shadow(1.5px 0 0 var(--color-cream))
+    drop-shadow(-1.5px 0 0 var(--color-cream))
+    drop-shadow(0 -1.5px 0 var(--color-cream));
+}
+.portrait .cutout-wrap { transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+.portrait:hover .cutout-wrap { transform: translateY(-6px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .portrait .cutout-wrap { transition: none; }
+}

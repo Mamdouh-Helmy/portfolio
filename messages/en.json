@@ -1,0 +1,208 @@
+{
+  "Brand": {
+    "name": "Mamdouh",
+    "initial": "M",
+    "first": "Mamdouh",
+    "last": "Helmy"
+  },
+  "Nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "projects": "Projects",
+    "certificates": "Certificates",
+    "contact": "Contact",
+    "cta": "Let’s talk",
+    "menu": "Menu"
+  },
+  "Hero": {
+    "page": "Front page",
+    "here": "That’s me",
+    "title": "I build websites and web apps that work right",
+    "sub": "Full-stack developer working with MERN, Next.js and React.",
+    "work": "See my work",
+    "contact": "Get in touch",
+    "tagFull": "Full-stack developer",
+    "tagAlive": "From the database to the UI"
+  },
+  "About": {
+    "eyebrow": "About me",
+    "title": "I’m a <hl>developer</hl> who loves the details",
+    "dropcap": "I’m",
+    "p1": " Mamdouh Helmy, a full-stack developer from Egypt. I learned to code and built complete platforms and websites by hand, from the database to the last button on the screen. The latest one was the website for Rakamiyat, a Saudi company.",
+    "p2": "I work as a full-stack developer at Code School, and I built a full learning platform on my own. I care about sites that are fast, easy to use, and handle Arabic and English properly, and about code that stays clean and easy to extend later.",
+    "sign": "Mamdouh",
+    "years": "Years of experience",
+    "yearsSub": "Building real projects",
+    "projects": "Projects delivered",
+    "projectsSub": "Platforms, dashboards and websites",
+    "techs": "Technologies I work with",
+    "techsSub": "From front end to server",
+    "tools": "My daily tools",
+    "toolsSub": "What I work with every day"
+  },
+  "Services": {
+    "eyebrow": "Services",
+    "title": "Services <hl>tailored</hl> to you",
+    "sub": "Five ways I can help you ship your product. Pick what fits.",
+    "popular": "Most requested",
+    "more": "Learn more",
+    "hint": "Hover over the cards to explore",
+    "close": "Close",
+    "includes": "What you get",
+    "cta": "Let’s talk about your project",
+    "items": [
+      {
+        "t": "Web application development",
+        "d": "Full platforms and apps that grow with you, from the idea to launch.",
+        "p": [
+          "Understanding the idea and scoping the work",
+          "Architecture that handles growth",
+          "Admin dashboard",
+          "Deployment and support after delivery"
+        ]
+      },
+      {
+        "t": "Front-end development",
+        "d": "Next.js and React interfaces that work on every screen and handle Arabic properly.",
+        "p": [
+          "Responsive on every screen",
+          "Full Arabic RTL support",
+          "Light motion and interactions",
+          "Speed and ease of use"
+        ]
+      },
+      {
+        "t": "Complete MERN applications",
+        "d": "Node, React, Express and MongoDB in one complete project.",
+        "p": [
+          "Front end, server and database",
+          "Authentication and roles",
+          "Solid schema design",
+          "Clean, maintainable code"
+        ]
+      },
+      {
+        "t": "Performance and SEO",
+        "d": "Faster pages, better search visibility and good Core Web Vitals scores.",
+        "p": [
+          "Performance audit",
+          "Image and file optimization",
+          "SEO and metadata setup",
+          "Core Web Vitals improvements"
+        ]
+      },
+      {
+        "t": "API development",
+        "d": "Secure, documented REST and GraphQL APIs that plug into any system easily.",
+        "p": [
+          "REST and GraphQL",
+          "Clear documentation",
+          "Authentication and security",
+          "Payment gateway and third-party integrations"
+        ]
+      }
+    ]
+  },
+  "Projects": {
+    "eyebrow": "Projects",
+    "title": "Work I <hl>built</hl> myself",
+    "sub": "Real projects I’ve worked on. Each one started with a problem and ended as a product people use.",
+    "featured": "Featured project",
+    "view": "View project",
+    "source": "Source code",
+    "empty": "No projects yet. Add the first one from the dashboard.",
+    "error": "Couldn’t load projects. Try again.",
+    "all": "All projects"
+  },
+  "Certificates": {
+    "eyebrow": "Certificates",
+    "title": "Certificates and credentials",
+    "verify": "Verify",
+    "verified": "Verified",
+    "close": "Close",
+    "open": "Open credential page",
+    "issuedBy": "Issued by"
+  },
+  "Contact": {
+    "eyebrow": "Contact",
+    "title": "Let’s build your <hl>next</hl> project together",
+    "sub": "Got an idea or a product that needs a push? I usually reply within 24 hours.",
+    "email": "Email",
+    "phone": "Phone",
+    "location": "Location",
+    "locationValue": "Egypt. Working remotely",
+    "whatsapp": "Start a chat",
+    "whatsappSub": "A quick message on WhatsApp or email",
+    "book": "Book a free consultation",
+    "bookSub": "30 minutes to talk about your project, no commitment",
+    "name": "Name",
+    "namePh": "Your full name",
+    "emailLabel": "Email",
+    "message": "Message",
+    "messagePh": "Tell me about your project…",
+    "send": "Send message",
+    "sending": "Sending…",
+    "sent": "Message received. I’ll reply soon.",
+    "failed": "Couldn’t send. Please try again."
+  },
+  "Footer": {
+    "tagline": "Full-stack developer · I write code with care.",
+    "up": "Back to top",
+    "quick": "Quick links",
+    "more": "More",
+    "social": "Follow me",
+    "language": "Language",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "cv": "Résumé (PDF)",
+    "rights": "© 2026 Mamdouh Helmy. All rights reserved.",
+    "made": "Made with love in Egypt."
+  },
+  "Validation": {
+    "required": "This field is required",
+    "name_min": "Name is too short (2 characters minimum)",
+    "name_max": "Name is too long",
+    "email_invalid": "Enter a valid email address",
+    "message_min": "Message is too short (10 characters minimum)",
+    "message_max": "Message is too long",
+    "password_min": "Password must be at least 8 characters",
+    "url_invalid": "Enter a valid URL",
+    "too_long": "Too long",
+    "too_many_tags": "Up to 8 tags"
+  },
+  "Admin": {
+    "loginTitle": "Admin sign in",
+    "password": "Password",
+    "login": "Sign in",
+    "loggingIn": "Signing in…",
+    "invalid": "Wrong email or password",
+    "tooMany": "Too many attempts. Try again in 15 minutes.",
+    "dashboard": "Dashboard",
+    "logout": "Sign out",
+    "tabProjects": "Projects",
+    "tabMessages": "Messages",
+    "newProject": "New project",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Delete this item permanently?",
+    "save": "Save",
+    "cancel": "Cancel",
+    "titleAr": "Title (Arabic)",
+    "titleEn": "Title (English)",
+    "descAr": "Description (Arabic)",
+    "descEn": "Description (English)",
+    "tags": "Technologies (comma separated)",
+    "link": "Project link",
+    "repo": "Source link",
+    "order": "Order",
+    "featured": "Featured project",
+    "image": "Project image",
+    "uploading": "Uploading…",
+    "noMessages": "No messages.",
+    "saveFailed": "Couldn’t save.",
+    "category": "Category",
+    "year": "Year",
+    "metrics": "Metrics (one per line: value | Arabic | English)"
+  }
+}
