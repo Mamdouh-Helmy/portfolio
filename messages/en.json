@@ -169,7 +169,8 @@
     "password_min": "Password must be at least 8 characters",
     "url_invalid": "Enter a valid URL",
     "too_long": "Too long",
-    "too_many_tags": "Up to 8 tags"
+    "too_many_tags": "Up to 8 tags",
+    "password_new_min": "Password must be at least 12 characters"
   },
   "Admin": {
     "loginTitle": "Admin sign in",

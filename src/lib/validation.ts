@@ -35,6 +35,28 @@ export const projectSchema = z.object({
   order: z.number().int().min(0).max(9999, "too_long").default(0),
 });
 
+// الاسم الفاضي بيتحوّل لـ undefined (يعني "ماتغيّرش")، عشان الأدمن اللي اتعمل بالسكريبت واسمه فاضي ما يتعلقش
+const optionalName = z.preprocess(
+  (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+  z.string().trim().min(2, "name_min").max(80, "name_max").optional(),
+);
+
+export const updateProfileSchema = z.object({
+  name: optionalName,
+  email: z.email("email_invalid").max(120).optional(),
+  newPassword: z.string().min(12, "password_new_min").max(128, "too_long").optional(),
+  currentPassword: z.string().min(1, "required").max(128).optional(),
+});
+
+export const createAdminSchema = z.object({
+  name: z.string().trim().min(2, "name_min").max(80, "name_max"),
+  email: z.email("email_invalid").max(120),
+  password: z.string().min(12, "password_new_min").max(128, "too_long"),
+  currentPassword: z.string().min(1, "required").max(128),
+});
+
+export const confirmSchema = z.object({ currentPassword: z.string().min(1, "required").max(128) });
+
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ContactInput = z.infer<typeof contactSchema>;
 export type ProjectInput = z.infer<typeof projectSchema>;

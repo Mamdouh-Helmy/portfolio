@@ -2,7 +2,11 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import { AccountPanel } from "@/components/admin/AccountPanel";
 import { ReplyBox } from "@/components/admin/ReplyBox";
+import { TeamPanel } from "@/components/admin/TeamPanel";
+import { Avatar, Labeled, Section, btn, card } from "@/components/admin/ui";
+import { useMe } from "@/hooks/useAdmins";
 import { useLogout } from "@/hooks/useAuth";
 import { useDeleteMessage, useMessages, useProjectMutations, useProjects } from "@/hooks/useProjects";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -13,7 +17,8 @@ import type { ProjectDoc } from "@/models/Project";
 
 const COPY = {
   ar: {
-    welcome: "أهلًا يا ممدوح", site: "عرض الموقع", total: "المشاريع", featured: "المميزة", inbox: "الرسايل", week: "آخر ٧ أيام",
+    welcome: "أهلًا بيك يا", site: "عرض الموقع", total: "المشاريع", featured: "المميزة", inbox: "الرسايل", week: "آخر ٧ أيام",
+    account: "حسابي", team: "الأدمنز",
     search: "دوّر…", all: "الكل", noResults: "مفيش نتايج", noProjects: "لسه مفيش مشاريع، ضيف أول واحد", loadError: "ماعرفتش أحمّل البيانات", retry: "حاول تاني",
     deleteNote: "مش هتقدر ترجّعه بعد المسح.", cancel: "إلغاء", basics: "الأساسيات", details: "التفاصيل", media: "الصورة", numbers: "أرقام الإنجاز", preview: "معاينة",
     addMetric: "ضيف رقم", value: "القيمة", labelAr: "الوصف بالعربي", labelEn: "الوصف بالإنجليزي", removeRow: "شيل", metricError: "كمّل الخانات التلاتة أو امسح الصف",
@@ -21,7 +26,8 @@ const COPY = {
     discard: "فيه تعديلات ماتحفظتش، تخرج؟", check: "راجع الحقول دي", tagsHint: "افصل بينهم بفاصلة", reply: "رد", copy: "انسخ الإيميل", copied: "اتنسخ", deleteFailed: "المسح فشل", untitled: "عنوان المشروع",
   },
   en: {
-    welcome: "Welcome back, Mamdouh", site: "View site", total: "Projects", featured: "Featured", inbox: "Messages", week: "Last 7 days",
+    welcome: "Welcome back,", site: "View site", total: "Projects", featured: "Featured", inbox: "Messages", week: "Last 7 days",
+    account: "My account", team: "Admins",
     search: "Search…", all: "All", noResults: "No results", noProjects: "No projects yet, add your first", loadError: "Couldn't load data", retry: "Retry",
     deleteNote: "This can't be undone.", cancel: "Cancel", basics: "Basics", details: "Details", media: "Image", numbers: "Key numbers", preview: "Preview",
     addMetric: "Add number", value: "Value", labelAr: "Arabic label", labelEn: "English label", removeRow: "Remove", metricError: "Fill all three or remove the row",
@@ -43,8 +49,7 @@ const toDraft = (p: ProjectDoc): Draft => ({
 });
 const splitTags = (s: string) => s.split(/[,،]/).map((x) => x.trim()).filter(Boolean);
 
-const btn = "rounded-full px-5 py-2.5 text-sm font-semibold transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-60";
-const card = "rounded-3xl border border-ink/10 bg-cream p-5 shadow-lg shadow-ink/5";
+type Tab = "projects" | "messages" | "account" | "team";
 
 /** يرجّع للـ login لو الجلسة انتهت */
 function useSessionGuard(error: unknown) {
@@ -60,15 +65,17 @@ export function Dashboard() {
   const c = COPY[locale];
   const router = useRouter();
   const logout = useLogout();
+  const me = useMe();
   const projects = useProjects();
   const messages = useMessages();
-  const [tab, setTab] = useState<"projects" | "messages">("projects");
+  const [tab, setTab] = useState<Tab>("projects");
   const [draft, setDraft] = useState<Draft | null>(null);
   const [now] = useState(() => Date.now());
-  useSessionGuard(messages.error);
+  useSessionGuard(messages.error ?? me.error);
 
   const list = projects.data ?? [];
   const inbox = messages.data ?? [];
+  const who = me.data?.name || me.data?.email.split("@")[0] || "";
   const stats = [
     { label: c.total, n: list.length },
     { label: c.featured, n: list.filter((p) => p.featured).length },
@@ -80,9 +87,12 @@ export function Dashboard() {
     <main className="dots min-h-dvh pb-16">
       <header className="weave bg-ink pb-24 pt-8 text-cream">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5">
-          <div className="rise">
-            <p className="font-note text-sand">{c.welcome}</p>
-            <h1 className="font-display text-4xl">{t("dashboard")}</h1>
+          <div className="rise flex items-center gap-4">
+            <Avatar url={me.data?.avatarUrl} name={who} size={64} ring />
+            <div>
+              <p className="font-note text-sand">{c.welcome} <bdi>{who}</bdi></p>
+              <h1 className="font-display text-4xl">{t("dashboard")}</h1>
+            </div>
           </div>
           <div className="flex gap-2">
             <Link href="/" className={`${btn} border border-cream/40`}>{c.site}</Link>
@@ -102,11 +112,13 @@ export function Dashboard() {
           ))}
         </ul>
 
-        <div className="mt-8 inline-flex gap-1 rounded-full bg-sand p-1" role="tablist">
-          {(["projects", "messages"] as const).map((k) => (
-            <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)} className={`rounded-full px-5 py-2 text-sm font-semibold transition ${tab === k ? "bg-ink text-cream" : "hover:bg-cream"}`}>
-              {t(k === "projects" ? "tabProjects" : "tabMessages")}
-              <span className="ms-2 rounded-full bg-terra px-2 text-xs text-cream">{k === "projects" ? list.length : inbox.length}</span>
+        <div className="mt-8 inline-flex max-w-full gap-1 overflow-x-auto rounded-full bg-sand p-1" role="tablist">
+          {(["projects", "messages", "account", "team"] as const).map((k) => (
+            <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)} className={`shrink-0 rounded-full px-5 py-2 text-sm font-semibold transition ${tab === k ? "bg-ink text-cream" : "hover:bg-cream"}`}>
+              {k === "projects" ? t("tabProjects") : k === "messages" ? t("tabMessages") : c[k]}
+              {(k === "projects" || k === "messages") && (
+                <span className="ms-2 rounded-full bg-terra px-2 text-xs text-cream">{k === "projects" ? list.length : inbox.length}</span>
+              )}
             </button>
           ))}
         </div>
@@ -116,6 +128,8 @@ export function Dashboard() {
           {draft ? <ProjectForm key={draft.id ?? "new"} draft={draft} locale={locale} onDone={() => setDraft(null)} /> : <ProjectList query={projects} locale={locale} onEdit={setDraft} />}
         </div>
         {tab === "messages" && <Messages query={messages} locale={locale} />}
+        {tab === "account" && <AccountPanel locale={locale} />}
+        {tab === "team" && <TeamPanel locale={locale} />}
       </div>
     </main>
   );
@@ -378,25 +392,5 @@ function Confirm({ locale, subject, onConfirm, onCancel }: { locale: Locale; sub
         <button onClick={onConfirm} className={`${btn} flex-1 bg-terra text-cream`}>{t("delete")}</button>
       </div>
     </dialog>
-  );
-}
-
-function Section({ n, title, children }: { n: string; title: string; children: ReactNode }) {
-  return (
-    <fieldset className={card}>
-      <legend className="sr-only">{title}</legend>
-      <h2 aria-hidden className="font-display mb-4 flex items-center gap-3 text-2xl"><span className="outline-num text-4xl">{n}</span>{title}</h2>
-      {children}
-    </fieldset>
-  );
-}
-
-function Labeled({ label, error, hint, children }: { label: string; error?: string; hint?: string; children: ReactNode }) {
-  return (
-    <label className="block">
-      <span className="mb-1 flex justify-between gap-2 text-sm font-semibold">{label}{hint && <span className="text-xs font-normal text-ink/50">{hint}</span>}</span>
-      {children}
-      {error && <span className="mt-1 block text-sm text-terra">{error}</span>}
-    </label>
   );
 }

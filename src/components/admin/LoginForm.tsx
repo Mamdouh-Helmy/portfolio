@@ -33,7 +33,10 @@ export function LoginForm() {
     setMsg("");
     if (!form.validate()) return;
     login.mutate(form.values, {
-      onSuccess: () => router.replace("/admin"),
+      onSuccess: () => {
+        router.replace("/admin");
+        router.refresh(); // عشان السيرفر يقرا الكوكي الجديدة
+      },
       onError: (err) => {
         form.applyServerError(err);
         const status = err instanceof ApiError ? err.status : 0;
@@ -110,7 +113,7 @@ export function LoginForm() {
               </div>
 
               {msg && (
-                <p role="alert" className="swap rounded-xl border-2 border-dashed border-terra bg-terra/10 px-4 py-2 text-sm text-terra">
+                <p role="alert" aria-live="assertive" className="swap rounded-xl border-2 border-dashed border-terra bg-terra/10 px-4 py-2 text-sm text-terra">
                   {msg}
                 </p>
               )}

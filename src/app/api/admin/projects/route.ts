@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { handle, json, unauthorized } from "@/lib/api";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/lib/require-admin";
 import { connectDB } from "@/lib/db";
 import { projectSchema } from "@/lib/validation";
 import { Project } from "@/models/Project";

@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { isValidObjectId } from "mongoose";
 import { handle, json, unauthorized } from "@/lib/api";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/lib/require-admin";
 import { connectDB } from "@/lib/db";
 import { Message } from "@/models/Message";
 

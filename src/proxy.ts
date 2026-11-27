@@ -19,7 +19,7 @@ export async function proxy(req: NextRequest) {
   if (m) {
     const [, locale, isLogin] = m;
     if (!admin && !isLogin) return NextResponse.redirect(new URL(`/${locale}/admin/login`, req.url));
-    if (admin && isLogin) return NextResponse.redirect(new URL(`/${locale}/admin`, req.url));
+    // تحويل الأدمن المسجّل من الـ login لـ /admin بيتم في الصفحة نفسها (بتفحص الداتابيز)
     const res = intl(req);
     res.headers.set("Cache-Control", "no-store");
     res.headers.set("X-Robots-Tag", "noindex, nofollow");

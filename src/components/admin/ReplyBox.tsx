@@ -33,7 +33,7 @@ export function ReplyBox({ id, locale, repliedAt, onSent }: Props) {
     } catch (e) {
       setState("idle");
       const status = e instanceof ApiError ? e.status : 0;
-      if (status === 401) return router.replace("/admin/login");
+      if (status === 401 || status === 403) return router.replace("/admin/login");
       setError(status === 429 ? c.tooMany : c.failed);
     }
   };

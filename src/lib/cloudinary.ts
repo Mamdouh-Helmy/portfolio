@@ -7,14 +7,19 @@ cloudinary.config({
   secure: true,
 });
 
-export function uploadImage(buffer: Buffer): Promise<{ url: string; publicId: string }> {
+type UploadOpts = { folder?: string; transformation?: Record<string, unknown>[] };
+
+export function uploadImage(buffer: Buffer, opts: UploadOpts = {}): Promise<{ url: string; publicId: string }> {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream(
-      { folder: "portfolio/projects", resource_type: "image", transformation: [{ width: 1400, crop: "limit", quality: "auto", fetch_format: "auto" }] },
+      {
+        folder: opts.folder ?? "portfolio/projects",
+        resource_type: "image",
+        transformation: opts.transformation ?? [{ width: 1400, crop: "limit", quality: "auto", fetch_format: "auto" }],
+      },
       (err, res) => (err || !res ? reject(err) : resolve({ url: res.secure_url, publicId: res.public_id })),
     ).end(buffer);
   });
 }
-export const deleteImage = (publicId: string) => cloudinary.uploader.destroy(publicId);
 
-cloudinary.api.ping().then((r) => console.log("PING OK:", r)).catch((e) => console.log("PING FAIL:", e));
+export const deleteImage = (publicId: string) => cloudinary.uploader.destroy(publicId);
