@@ -89,9 +89,9 @@ export function Dashboard() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5">
           <div className="rise flex items-center gap-4">
             <Avatar url={me.data?.avatarUrl} name={who} size={64} ring />
-            <div>
-              <p className="font-note text-sand">{c.welcome} <bdi>{who}</bdi></p>
-              <h1 className="font-display text-4xl">{t("dashboard")}</h1>
+            <div className="flex flex-col gap-3">
+              <p className="font-note text-lg leading-none text-sand">{c.welcome} <bdi>{who}</bdi></p>
+              <h1 className="font-display text-4xl leading-[1.6]">{t("dashboard")}</h1>
             </div>
           </div>
           <div className="flex gap-2">
