@@ -1,4 +1,4 @@
-// src/lib/mail.ts — سيرفر بس، ماتعملوش import في أي ملف "use client"
+// src/lib/mail.ts
 import nodemailer from "nodemailer";
 import { PORTRAIT_BASE64 } from "./mail-portrait";
 import { isArabic, notificationHtml, replyHtml } from "./mail-template";
@@ -10,12 +10,10 @@ function mailer() {
   return { user, transport: nodemailer.createTransport({ service: "gmail", auth: { user, pass } }) };
 }
 
-// الصورة مرفقة جوه الإيميل (cid) فبتظهر حتى وانت شغال على localhost
 const attachments = [{ filename: "portrait.jpg", content: Buffer.from(PORTRAIT_BASE64, "base64"), cid: "portrait", contentType: "image/jpeg" }];
 
 type Contact = { name: string; email: string; message: string };
 
-/** إشعار ليك برسالة جديدة. لو دوست Reply في Gmail هيرد على الزائر */
 export async function notifyNewMessage({ name, email, message }: Contact) {
   const { user, transport } = mailer();
   const site = process.env.SITE_URL?.replace(/\/$/, "");
@@ -30,7 +28,6 @@ export async function notifyNewMessage({ name, email, message }: Contact) {
   });
 }
 
-/** ردك على الزائر من الـ Dashboard */
 export async function sendReply(to: Contact, body: string) {
   const { user, transport } = mailer();
   const quoted = to.message.split("\n").map((l) => `> ${l}`).join("\n");

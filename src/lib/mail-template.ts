@@ -35,7 +35,6 @@ const quote = (text: string) =>
 const button = (href: string, label: string, bg: string) =>
   `<a href="${esc(href)}" style="display:inline-block;margin:4px;padding:12px 28px;border-radius:999px;background:${bg};color:#FAF5EC;font-weight:bold;font-size:14px;text-decoration:none;">${esc(label)}</a>`;
 
-/** الإشعار اللي بيوصلك */
 export function notificationHtml({ name, email, message, dashboardUrl }: { name: string; email: string; message: string; dashboardUrl?: string }) {
   return layout({
     rtl: true,
@@ -54,7 +53,6 @@ export function notificationHtml({ name, email, message, dashboardUrl }: { name:
   });
 }
 
-/** ردك اللي بيوصل للزائر */
 export function replyHtml({ name, message, body }: { name: string; message: string; body: string }) {
   const rtl = isArabic(body);
   return layout({

@@ -9,6 +9,8 @@ const schema = new Schema(
     tags: [String],
     imageUrl: { type: String, required: true },
     imagePublicId: { type: String, required: true },
+    videoUrl: { type: String, default: "" },
+    videoPublicId: { type: String, default: "" },
     link: { type: String, default: "" },
     repo: { type: String, default: "" },
     category: { type: String, default: "" },

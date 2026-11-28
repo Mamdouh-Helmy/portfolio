@@ -1,11 +1,10 @@
-// src/lib/rate-limit.ts — في الذاكرة: يكفي لسيرفر واحد. على serverless استخدم Redis.
+// src/lib/rate-limit.ts 
 import type { NextRequest } from "next/server";
 
 const hits = new Map<string, { n: number; reset: number }>();
 
 export const clientIp = (req: NextRequest) => req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
 
-/** يعدّ المحاولة فورًا ويرجّع false لو عدّت الحد */
 export function allow(key: string, max: number, windowMs: number) {
   const now = Date.now();
   if (hits.size > 5000) for (const [k, v] of hits) if (v.reset <= now) hits.delete(k);

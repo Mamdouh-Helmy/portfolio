@@ -8,7 +8,7 @@ import { TeamPanel } from "@/components/admin/TeamPanel";
 import { Avatar, Labeled, Section, btn, card } from "@/components/admin/ui";
 import { useMe } from "@/hooks/useAdmins";
 import { useLogout } from "@/hooks/useAuth";
-import { useDeleteMessage, useMessages, useProjectMutations, useProjects } from "@/hooks/useProjects";
+import { uploadVideo, useDeleteMessage, useMessages, useProjectMutations, useProjects } from "@/hooks/useProjects";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { projectSchema, fieldErrors, type FieldErrors } from "@/lib/validation";
@@ -20,30 +20,33 @@ const COPY = {
     welcome: "أهلًا بيك يا", site: "عرض الموقع", total: "المشاريع", featured: "المميزة", inbox: "الرسايل", week: "آخر ٧ أيام",
     account: "حسابي", team: "الأدمنز",
     search: "دوّر…", all: "الكل", noResults: "مفيش نتايج", noProjects: "لسه مفيش مشاريع، ضيف أول واحد", loadError: "ماعرفتش أحمّل البيانات", retry: "حاول تاني",
-    deleteNote: "مش هتقدر ترجّعه بعد المسح.", cancel: "إلغاء", basics: "الأساسيات", details: "التفاصيل", media: "الصورة", numbers: "أرقام الإنجاز", preview: "معاينة",
+    deleteNote: "مش هتقدر ترجّعه بعد المسح.", cancel: "إلغاء", basics: "الأساسيات", details: "التفاصيل", media: "الصورة والفيديو", numbers: "أرقام الإنجاز", preview: "معاينة",
     addMetric: "ضيف رقم", value: "القيمة", labelAr: "الوصف بالعربي", labelEn: "الوصف بالإنجليزي", removeRow: "شيل", metricError: "كمّل الخانات التلاتة أو امسح الصف",
     drop: "اسحب الصورة هنا أو اضغط للاختيار", limits: "JPG / PNG / WebP لحد 5MB", badFile: "الملف لازم يكون JPG أو PNG أو WebP وأصغر من 5MB", uploadFailed: "الرفع فشل، حاول تاني",
+    video: "فيديو (اختياري)", dropVideo: "اسحب الفيديو هنا أو اضغط للاختيار", videoLimits: "MP4 / WebM لحد 50MB، بيشتغل من غير صوت", badVideo: "الفيديو لازم يكون MP4 أو WebM وأصغر من 50MB", videoFailed: "رفع الفيديو فشل، حاول تاني", removeVideo: "شيل الفيديو",
     discard: "فيه تعديلات ماتحفظتش، تخرج؟", check: "راجع الحقول دي", tagsHint: "افصل بينهم بفاصلة", reply: "رد", copy: "انسخ الإيميل", copied: "اتنسخ", deleteFailed: "المسح فشل", untitled: "عنوان المشروع",
   },
   en: {
     welcome: "Welcome back,", site: "View site", total: "Projects", featured: "Featured", inbox: "Messages", week: "Last 7 days",
     account: "My account", team: "Admins",
     search: "Search…", all: "All", noResults: "No results", noProjects: "No projects yet, add your first", loadError: "Couldn't load data", retry: "Retry",
-    deleteNote: "This can't be undone.", cancel: "Cancel", basics: "Basics", details: "Details", media: "Image", numbers: "Key numbers", preview: "Preview",
+    deleteNote: "This can't be undone.", cancel: "Cancel", basics: "Basics", details: "Details", media: "Image & video", numbers: "Key numbers", preview: "Preview",
     addMetric: "Add number", value: "Value", labelAr: "Arabic label", labelEn: "English label", removeRow: "Remove", metricError: "Fill all three or remove the row",
     drop: "Drop an image here or click to choose", limits: "JPG / PNG / WebP up to 5MB", badFile: "File must be JPG, PNG or WebP under 5MB", uploadFailed: "Upload failed, try again",
+    video: "Video (optional)", dropVideo: "Drop a video here or click to choose", videoLimits: "MP4 / WebM up to 50MB, plays muted", badVideo: "Video must be MP4 or WebM under 50MB", videoFailed: "Video upload failed, try again", removeVideo: "Remove video",
     discard: "You have unsaved changes. Leave?", check: "Check these fields", tagsHint: "Separate with commas", reply: "Reply", copy: "Copy email", copied: "Copied", deleteFailed: "Delete failed", untitled: "Project title",
   },
 };
 
 type Locale = "ar" | "en";
 type Metric = { value: string; ar: string; en: string };
-type Draft = { id?: string; title: Record<Locale, string>; description: Record<Locale, string>; tags: string; imageUrl: string; imagePublicId: string; link: string; repo: string; featured: boolean; order: number; category: string; year: string; metrics: Metric[] };
+type Draft = { id?: string; title: Record<Locale, string>; description: Record<Locale, string>; tags: string; imageUrl: string; imagePublicId: string; videoUrl: string; videoPublicId: string; link: string; repo: string; featured: boolean; order: number; category: string; year: string; metrics: Metric[] };
 const blank = { ar: "", en: "" };
-const empty: Draft = { title: blank, description: blank, tags: "", imageUrl: "", imagePublicId: "", link: "", repo: "", featured: false, order: 0, category: "", year: "", metrics: [] };
+const empty: Draft = { title: blank, description: blank, tags: "", imageUrl: "", imagePublicId: "", videoUrl: "", videoPublicId: "", link: "", repo: "", featured: false, order: 0, category: "", year: "", metrics: [] };
 
 const toDraft = (p: ProjectDoc): Draft => ({
   id: String(p._id), title: p.title, description: p.description, tags: p.tags.join(", "), imageUrl: p.imageUrl, imagePublicId: p.imagePublicId,
+  videoUrl: p.videoUrl ?? "", videoPublicId: p.videoPublicId ?? "",
   link: p.link ?? "", repo: p.repo ?? "", featured: !!p.featured, order: p.order ?? 0, category: p.category ?? "", year: p.year ?? "",
   metrics: (p.metrics ?? []).map((m) => ({ value: m.value ?? "", ar: m.ar ?? "", en: m.en ?? "" })),
 });
@@ -51,7 +54,6 @@ const splitTags = (s: string) => s.split(/[,،]/).map((x) => x.trim()).filter(Bo
 
 type Tab = "projects" | "messages" | "account" | "team";
 
-/** يرجّع للـ login لو الجلسة انتهت */
 function useSessionGuard(error: unknown) {
   const router = useRouter();
   useEffect(() => {
@@ -123,7 +125,6 @@ export function Dashboard() {
           ))}
         </div>
 
-        {/* الفورم بيفضل موجود حتى لو بدّلت التاب، عشان التعديلات ماتضيعش */}
         <div hidden={tab !== "projects"}>
           {draft ? <ProjectForm key={draft.id ?? "new"} draft={draft} locale={locale} onDone={() => setDraft(null)} /> : <ProjectList query={projects} locale={locale} onEdit={setDraft} />}
         </div>
@@ -161,10 +162,11 @@ function ProjectList({ query, locale, onEdit }: { query: ReturnType<typeof usePr
         <ul className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((p) => (
             <li key={String(p._id)} className={`${card} group flex flex-col overflow-hidden p-0!`}>
-              <div className="relative aspect-[3/2] overflow-hidden bg-sand">
-                <Image src={p.imageUrl} alt="" fill sizes="(min-width:1024px) 33vw, 100vw" className="object-cover transition duration-500 group-hover:scale-105" />
+              <div className="relative aspect-video overflow-hidden bg-sand">
+                <Image src={p.imageUrl} alt="" fill sizes="(min-width:1024px) 33vw, 100vw" className="object-contain transition duration-500 group-hover:scale-105" />
                 {p.featured && <span className="absolute start-3 top-3 rounded-full bg-terra px-3 py-1 text-xs font-bold text-cream">★ {c.featured}</span>}
                 <span className="absolute end-3 top-3 rounded-full bg-ink/80 px-2.5 py-1 text-xs text-cream">#{p.order ?? 0}</span>
+                {p.videoUrl && <span className="absolute bottom-3 end-3 rounded-full bg-ink/80 px-2.5 py-1 text-xs text-cream">🎬</span>}
               </div>
               <div className="flex flex-1 flex-col p-4">
                 <p className="text-xs text-ink/60">{[p.category, p.year].filter(Boolean).join(" · ")}</p>
@@ -196,6 +198,9 @@ function ProjectForm({ draft, locale, onDone }: { draft: Draft; locale: Locale; 
   const [failed, setFailed] = useState(false);
   const [fileError, setFileError] = useState("");
   const [over, setOver] = useState(false);
+  const [vp, setVp] = useState<number | null>(null);
+  const [videoError, setVideoError] = useState("");
+  const [overV, setOverV] = useState(false);
   const dirty = JSON.stringify(d) !== JSON.stringify(draft);
   const saving = create.isPending || update.isPending;
   useSessionGuard(create.error ?? update.error ?? upload.error);
@@ -233,6 +238,17 @@ function ProjectForm({ draft, locale, onDone }: { draft: Draft; locale: Locale; 
       onSuccess: (r) => setD((x) => ({ ...x, imageUrl: r.url, imagePublicId: r.publicId })),
       onError: () => setFileError(c.uploadFailed),
     });
+  };
+
+  const pickVideo = (file?: File) => {
+    if (!file) return;
+    setVideoError("");
+    if (!["video/mp4", "video/webm"].includes(file.type) || file.size > 50 * 1024 * 1024) return setVideoError(c.badVideo);
+    setVp(0);
+    uploadVideo(file, setVp)
+      .then((r) => setD((x) => ({ ...x, videoUrl: r.url, videoPublicId: r.publicId })))
+      .catch(() => setVideoError(c.videoFailed))
+      .finally(() => setVp(null));
   };
 
   const bi = (k: "title" | "description", label: string, lang: Locale, area = false) => {
@@ -300,14 +316,39 @@ function ProjectForm({ draft, locale, onDone }: { draft: Draft; locale: Locale; 
             <input type="file" accept="image/jpeg,image/png,image/webp" disabled={upload.isPending} onChange={(e) => { pick(e.target.files?.[0]); e.target.value = ""; }} className="sr-only" />
           </label>
           {(fileError || err("imageUrl")) && <p role="alert" className="mt-2 text-sm text-terra">{fileError || err("imageUrl")}</p>}
+
+          <div className="mt-5">
+            <p className="mb-2 text-sm font-semibold">{c.video}</p>
+            {d.videoUrl ? (
+              <div className="space-y-2">
+                <video src={d.videoUrl} autoPlay muted loop playsInline className="aspect-video w-full rounded-2xl bg-ink object-contain" />
+                <button type="button" onClick={() => setD((x) => ({ ...x, videoUrl: "", videoPublicId: "" }))} className={`${btn} border border-terra text-terra`}>{c.removeVideo}</button>
+              </div>
+            ) : (
+              <label
+                onDragOver={(e) => { e.preventDefault(); setOverV(true); }}
+                onDragLeave={() => setOverV(false)}
+                onDrop={(e) => { e.preventDefault(); setOverV(false); if (vp === null) pickVideo(e.dataTransfer.files[0]); }}
+                className={`block cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition focus-within:border-terra ${overV ? "border-terra bg-terra/10" : "border-ink/25"}`}
+              >
+                <span className="font-semibold">{vp !== null ? `${t("uploading")} ${vp}%` : c.dropVideo}</span>
+                {vp !== null && <span className="mx-auto mt-3 block h-1.5 w-48 overflow-hidden rounded-full bg-ink/10"><span className="block h-full bg-terra transition-[width]" style={{ width: `${vp}%` }} /></span>}
+                <span className="mt-1 block text-xs text-ink/60">{c.videoLimits}</span>
+                <input type="file" accept="video/mp4,video/webm" disabled={vp !== null} onChange={(e) => { pickVideo(e.target.files?.[0]); e.target.value = ""; }} className="sr-only" />
+              </label>
+            )}
+            {(videoError || err("videoUrl")) && <p role="alert" className="mt-2 text-sm text-terra">{videoError || err("videoUrl")}</p>}
+          </div>
         </Section>
       </div>
 
       <aside className="space-y-4 lg:sticky lg:top-6">
         <div className={`${card} p-0! overflow-hidden`}>
           <p className="bg-ink px-4 py-2 text-xs font-semibold text-cream">{c.preview}</p>
-          <div className="halftone relative aspect-[3/2]">
-            {d.imageUrl && <Image src={d.imageUrl} alt="" fill sizes="320px" className="object-cover" />}
+          <div className="halftone relative aspect-video">
+            {d.videoUrl
+              ? <video src={d.videoUrl} autoPlay muted loop playsInline className="absolute inset-0 size-full object-contain" />
+              : d.imageUrl && <Image src={d.imageUrl} alt="" fill sizes="320px" className="object-contain" />}
           </div>
           <div className="p-4">
             <p className="text-xs text-ink/60">{[d.category, d.year].filter(Boolean).join(" · ")}</p>
@@ -318,7 +359,7 @@ function ProjectForm({ draft, locale, onDone }: { draft: Draft; locale: Locale; 
         </div>
         {Object.keys(errors).length > 0 && <p role="alert" className="rounded-xl border-2 border-dashed border-terra px-3 py-2 text-sm text-terra">{c.check}: <bdi>{Object.keys(errors).join(", ")}</bdi></p>}
         {failed && <p role="alert" className="text-sm text-terra">{t("saveFailed")}</p>}
-        <button disabled={saving || upload.isPending} className={`${btn} w-full bg-ink text-cream`}>{t("save")}</button>
+        <button disabled={saving || upload.isPending || vp !== null} className={`${btn} w-full bg-ink text-cream`}>{t("save")}</button>
         <button type="button" disabled={saving} onClick={() => { if (!dirty || confirm(c.discard)) onDone(); }} className={`${btn} w-full border border-ink`}>{t("cancel")}</button>
       </aside>
     </form>

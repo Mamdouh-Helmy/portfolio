@@ -23,3 +23,11 @@ export function uploadImage(buffer: Buffer, opts: UploadOpts = {}): Promise<{ ur
 }
 
 export const deleteImage = (publicId: string) => cloudinary.uploader.destroy(publicId);
+
+export const deleteVideo = (publicId: string) => cloudinary.uploader.destroy(publicId, { resource_type: "video" });
+
+export function signUpload(folder = "portfolio/videos") {
+  const timestamp = Math.round(Date.now() / 1000);
+  const signature = cloudinary.utils.api_sign_request({ timestamp, folder }, process.env.CLOUDINARY_API_SECRET!);
+  return { timestamp, signature, folder, apiKey: process.env.CLOUDINARY_API_KEY!, cloudName: process.env.CLOUDINARY_CLOUD_NAME! };
+}

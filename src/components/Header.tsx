@@ -22,7 +22,6 @@ export function Header() {
     const measure = () => {
       const a = nav.querySelector<HTMLElement>(`[data-id="${active}"]`);
       if (a) {
-        /* الـ padding بيتقري من العنصر نفسه عشان الخط المتعرّج يمشي مع حدود الكلام في كل الشاشات */
         const pad = parseFloat(getComputedStyle(a).paddingLeft) || 0;
         setMark({ left: a.offsetLeft + pad, width: Math.max(0, a.offsetWidth - pad * 2) });
         requestAnimationFrame(() => setReady(true));
@@ -35,7 +34,6 @@ export function Header() {
     return () => ro.disconnect();
   }, [active, locale]);
 
-  /* قائمة الموبايل: Escape يقفلها، وتتقفل لوحدها لما الشاشة تكبر */
   useEffect(() => {
     if (!menu) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenu(false);
@@ -50,7 +48,6 @@ export function Header() {
   }, [menu]);
 
   return (
-    /* الـ blur بيتشال وقت فتح القائمة: الـ backdrop-filter مع أي أنيميشن جواه هو اللي بيبطّأ الموبايل */
     <header className={`sticky top-0 z-50 ${menu ? "bg-cream" : "bg-cream/90 backdrop-blur"}`}>
       <div className="relative z-10 mx-auto flex max-w-7xl items-center justify-between gap-3 bg-cream/0 px-4 py-3 sm:gap-6 sm:px-6 md:py-5">
         <a href="#home" className="flex shrink-0 items-center gap-4" aria-label={t("Brand.name")}>
@@ -59,7 +56,6 @@ export function Header() {
         </a>
 
         <nav ref={navRef} className="relative hidden shrink-0 items-center text-base font-medium lg:flex xl:text-[17px]" aria-label="Main">
-          {/* خط متعرّج تحت اللينك النشط (من نفس هوية الموقع) بدل الصندوق */}
           <span
             aria-hidden
             className={`squiggle absolute -bottom-1 ${ready ? "transition-[left,width] duration-500 ease-[cubic-bezier(.65,0,.2,1)]" : ""}`}
@@ -97,7 +93,6 @@ export function Header() {
         </div>
       </div>
 
-      {/* الخلفية: بتعتّم الصفحة وضغطة عليها تقفل القائمة */}
       <button
         type="button"
         tabIndex={-1}
@@ -106,8 +101,6 @@ export function Header() {
         className={`fixed inset-0 -z-10 cursor-default bg-ink/40 transition-opacity duration-500 ease-out motion-reduce:transition-none lg:hidden ${menu ? "opacity-100" : "pointer-events-none opacity-0"}`}
       />
 
-      {/* القائمة موجودة دايمًا (مش mount/unmount) وبتتحرك بـ clip-path بس، فمفيش layout ولا ثقل.
-          invisible وهي مقفولة عشان تخرج من الـ tab order والـ screen readers. */}
       <nav
         id="mobile-nav"
         aria-label="Mobile"

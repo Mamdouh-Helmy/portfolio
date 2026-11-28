@@ -69,7 +69,6 @@ export function ServiceModal({ index, title, description, points, icon, labels, 
         </button>
 
         <div className="grid md:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)]">
-          {/* الجزء الغامق */}
           <div className="weave relative flex min-h-[13rem] flex-col justify-between overflow-hidden bg-ink p-6 text-cream sm:min-h-[15rem] sm:p-8 md:min-h-[28rem]">
             <SectionNum n={index + 1} className="outline-cur rise -ms-1 text-[6rem] text-terra sm:text-[8rem] md:text-[10rem]" />
 
@@ -85,7 +84,6 @@ export function ServiceModal({ index, title, description, points, icon, labels, 
             </div>
           </div>
 
-          {/* الجزء الفاتح (خط متقطع = خط التمزيق) */}
           <div className="border-dashed border-ink/30 px-6 pt-8 pb-8 sm:px-8 sm:pb-9 md:border-s-2 md:pt-16">
             <p className="rise text-[15px] leading-[2.1] text-ink/70" style={d(280)}>{description}</p>
 

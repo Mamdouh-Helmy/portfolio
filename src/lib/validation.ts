@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Messages are i18n keys (Validation.*) — shared by client and server.
 export const loginSchema = z.object({
   email: z.email("email_invalid").max(120),
   password: z.string().min(8, "password_min").max(128),
@@ -17,15 +16,17 @@ const bi = (min: number, max: number) => {
   return z.object({ ar: text, en: text });
 };
 
-// z.url() لوحدها بتقبل javascript: و data:
 const webUrl = z.url({ protocol: /^https?$/, error: "url_invalid" }).max(500, "too_long");
+const cloudinaryUrl = z.url({ protocol: /^https$/, hostname: /^res\.cloudinary\.com$/, error: "url_invalid" }).max(500);
 
 export const projectSchema = z.object({
   title: bi(2, 100),
   description: bi(10, 1000),
   tags: z.array(z.string().trim().min(1).max(30, "too_long")).max(8, "too_many_tags"),
-  imageUrl: z.url({ protocol: /^https$/, hostname: /^res\.cloudinary\.com$/, error: "url_invalid" }).max(500),
+  imageUrl: cloudinaryUrl,
   imagePublicId: z.string().min(1, "required").max(200),
+  videoUrl: z.union([cloudinaryUrl, z.literal("")], { error: "url_invalid" }).default(""),
+  videoPublicId: z.string().max(200).default(""),
   link: z.union([webUrl, z.literal("")], { error: "url_invalid" }).default(""),
   repo: z.union([webUrl, z.literal("")], { error: "url_invalid" }).default(""),
   category: z.string().trim().max(40, "too_long").default(""),
@@ -35,7 +36,6 @@ export const projectSchema = z.object({
   order: z.number().int().min(0).max(9999, "too_long").default(0),
 });
 
-// الاسم الفاضي بيتحوّل لـ undefined (يعني "ماتغيّرش")، عشان الأدمن اللي اتعمل بالسكريبت واسمه فاضي ما يتعلقش
 const optionalName = z.preprocess(
   (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
   z.string().trim().min(2, "name_min").max(80, "name_max").optional(),

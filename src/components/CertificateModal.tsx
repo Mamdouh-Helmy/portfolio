@@ -10,7 +10,6 @@ type Props = {
   year: string | number;
   url?: string;
   verified?: boolean;
-  /** صفحات الشهادة نفسها. لو موجودة المودال بيعرضها بدل الكارت النصي، من غير سكرول. */
   preview?: ReactNode[];
   labels: { close: string; open?: string; issuedBy: string; verified: string };
   onClose: () => void;

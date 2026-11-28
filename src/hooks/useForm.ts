@@ -4,7 +4,6 @@ import type { ZodType } from "zod";
 import { ApiError } from "@/lib/fetcher";
 import { fieldErrors, type FieldErrors } from "@/lib/validation";
 
-/** Tiny shared form helper: client validation with the SAME zod schema the server uses, plus server error mapping. */
 export function useZodForm<T extends Record<string, string>>(schema: ZodType, initial: T) {
   const [values, setValues] = useState(initial);
   const [errors, setErrors] = useState<FieldErrors>({});

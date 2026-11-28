@@ -1,3 +1,4 @@
+//api/projects/route.ts
 import { handle, json } from "@/lib/api";
 import { connectDB } from "@/lib/db";
 import { Project } from "@/models/Project";

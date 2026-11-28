@@ -1,3 +1,4 @@
+//api/admin/projects/route.ts
 import type { NextRequest } from "next/server";
 import { handle, json, unauthorized } from "@/lib/api";
 import { requireAdmin } from "@/lib/require-admin";

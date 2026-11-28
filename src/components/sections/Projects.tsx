@@ -11,7 +11,6 @@ const img = (u: string) => ({ unoptimized: u.endsWith(".svg") });
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const wrap = "mx-auto w-full max-w-6xl px-6 md:px-14";
 
-/** بيخزّن مكان الماوس جوه العنصر عشان الصورة تتحرك معاه */
 const track = (e: MouseEvent<HTMLLIElement>) => {
   const r = e.currentTarget.getBoundingClientRect();
   e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
@@ -29,7 +28,6 @@ export function Projects() {
   const lenis = useLenis();
   const detailRef = useRef<HTMLElement>(null);
 
-  /** نص حسب اللغة الحالية، ولو ناقص يرجع نص فاضي بدل error */
   const tx = (o: Localized) => (o as Record<string, string | undefined> | null | undefined)?.[locale] ?? "";
 
   const pick = (id: string) => {
@@ -60,12 +58,25 @@ export function Projects() {
 
         {isPending && <div className="mt-10 h-80 animate-pulse rounded-3xl bg-ink/10 md:mt-14" />}
         {isError && <p role="alert" className="mt-10 text-terra md:mt-14">{t("error")}</p>}
-        {data?.length === 0 && <p className="mt-10 text-ink/65 md:mt-14">{t("empty")}</p>}
-
-        {current && (
+        {data?.length === 0 && <p className="mt-10 text-ink/65 md:mt-14">{t("empty")}</p>}{current && (
           <article key={String(current._id)} ref={detailRef} className="swap mt-10 grid overflow-hidden rounded-3xl bg-ink text-cream shadow-2xl shadow-ink/30 md:mt-14 md:grid-cols-[1fr_1.25fr]">
-            <div className="bg-terra p-3 sm:p-4 md:p-5">
-              <Image src={current.imageUrl} alt={tx(current.title)} width={800} height={600} {...img(current.imageUrl)} className="aspect-[4/3] size-full rounded-2xl border-2 border-cream/60 object-cover" />
+            <div className={`bg-terra p-3 sm:p-4 md:p-5 ${current.videoUrl ? "flex items-center" : ""}`}>
+              {current.videoUrl ? (
+                <video
+                  key={current.videoUrl}
+                  src={current.videoUrl.replace("/upload/", "/upload/q_auto/")}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  disablePictureInPicture
+                  aria-label={tx(current.title)}
+                  className="block h-auto w-full rounded-2xl"
+                />
+              ) : (
+                <Image src={current.imageUrl} alt={tx(current.title)} width={1400} height={788} {...img(current.imageUrl)} className="aspect-video size-full rounded-2xl border-2 border-cream/60 object-contain" />
+              )}
             </div>
             <div className="weave flex min-w-0 flex-col justify-center gap-5 p-6 sm:p-8 md:p-12">
               <div className="flex flex-wrap items-center gap-3 text-xs">
@@ -90,8 +101,6 @@ export function Projects() {
           </article>
         )}
       </div>
-
-      {/* القايمة برّه الـ container عشان الحبر يلوّن عرض الشاشة كله */}
       <ol className="mt-10 border-t border-ink/20 md:mt-12">
         {data?.map((p, i) => {
           const active = p._id === current?._id;
@@ -102,7 +111,6 @@ export function Projects() {
                 aria-current={active}
                 className="relative block w-full overflow-hidden text-start"
               >
-                {/* تعبئة الحبر بتطلع من تحت وتغطي العرض كله */}
                 <span aria-hidden className="absolute inset-0 origin-bottom scale-y-0 bg-ink transition-transform duration-500 ease-[cubic-bezier(.65,0,.2,1)] group-hover:scale-y-100 group-focus-visible:scale-y-100" />
 
                 <span className={`relative block ${wrap}`}>
@@ -118,13 +126,12 @@ export function Projects() {
                 </span>
               </button>
 
-              {/* معاينة الصورة: بتتبع الماوس وتظهر بأنيميشن ناعم */}
               <span
                 aria-hidden
                 className="pointer-events-none absolute top-0 left-0 z-20 hidden md:block [transform:translate3d(var(--mx,50%),var(--my,50%),0)] [transition:transform_.6s_cubic-bezier(.2,.8,.2,1)]"
               >
                 <span className="ml-8 -mt-40 block w-56 origin-bottom-left scale-50 -rotate-12 opacity-0 drop-shadow-2xl [clip-path:inset(32%_round_1.5rem)] transition-[opacity,scale,rotate,clip-path] duration-700 ease-[cubic-bezier(.2,.8,.2,1)] group-hover:scale-100 group-hover:-rotate-6 group-hover:opacity-100 group-hover:[clip-path:inset(0%_round_1.5rem)]">
-                  <Image src={p.imageUrl} alt="" width={224} height={150} {...img(p.imageUrl)} className="aspect-[3/2] w-full rounded-3xl border-4 border-cream object-cover" />
+                  <Image src={p.imageUrl} alt="" width={448} height={252} {...img(p.imageUrl)} className="aspect-video w-full rounded-3xl border-4 border-cream object-cover" />
                 </span>
               </span>
             </li>

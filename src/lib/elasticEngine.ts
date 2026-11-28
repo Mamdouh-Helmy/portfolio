@@ -84,7 +84,6 @@ export class ElasticEngine {
   private lastTime = 0;
   private reduceMotion = false;
 
-  /** Starts observing the board. Returns a cleanup function. */
   attach(board: HTMLElement): () => void {
     this.board = board;
     this.reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -237,7 +236,6 @@ export class ElasticEngine {
     });
   }
 
-  /** Keeps every node horizontally inside the viewport, so dragging near an edge never creates a horizontal scrollbar. */
   private clampToViewport(probes: Map<string, Probe>) {
     const limit = document.documentElement.clientWidth;
 
@@ -283,7 +281,6 @@ export class ElasticEngine {
     const stretch = Math.max(0, span - restLength);
     const slack = Math.max(0, restLength - span);
 
-    // The curve flattens as the cord gets taut and sags when it goes slack.
     const bow = (cord.spec.bow ?? 0.25) * (this.rtl ? -1 : 1);
     const taut = clamp(1 - stretch / (restLength * 0.5), 0, 1);
     const bend = bow * restLength * taut + Math.sign(bow || 1) * slack * SLACK_SAG;

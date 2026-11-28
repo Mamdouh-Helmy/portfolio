@@ -4,7 +4,6 @@ import { COOKIE, verifyToken } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import { Admin } from "@/models/Admin";
 
-/** للصفحات (server components): بتفحص الـ JWT + الـ tokenVersion */
 export async function getAdmin() {
   const p = await verifyToken((await cookies()).get(COOKIE)?.value);
   if (!p?.sub) return null;
@@ -13,7 +12,6 @@ export async function getAdmin() {
   return doc && doc.tokenVersion === p.ver ? p : null;
 }
 
-/** للـ route handlers: بترجّع الـ admin id أو null، وبتفحص الـ origin على الـ mutations (CSRF) */
 export async function requireAdmin(req: NextRequest): Promise<string | null> {
   const p = await verifyToken(req.cookies.get(COOKIE)?.value);
   if (!p?.sub) return null;

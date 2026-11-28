@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 
-/** بيرجّع id السيكشن اللي في نص الشاشة دلوقتي */
 export function useActiveSection(ids: readonly string[]) {
   const [active, setActive] = useState<string>(ids[0]);
 
