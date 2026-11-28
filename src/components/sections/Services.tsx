@@ -128,7 +128,7 @@ export function Services() {
   const btns = useRef<(HTMLButtonElement | null)[]>([]);
   const paths = useRef<(SVGPathElement | null)[]>([]);
   const st = useRef<S[]>(Array.from({ length: n }, mk));
-  const kickRef = useRef<() => void>(() => {});
+  const kickRef = useRef<() => void>(() => { });
 
   const api = useMemo<Api>(
     () => ({
@@ -243,7 +243,7 @@ export function Services() {
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      kickRef.current = () => {};
+      kickRef.current = () => { };
     };
   }, [n]);
 
@@ -300,7 +300,7 @@ export function Services() {
                 {mid && (
                   <>
                     {/* موبايل/تابلت: شارة عادية جوه الكارت */}
-                    <span className="mb-3 self-start rounded-full bg-terra px-3 py-1 font-note text-sm font-bold text-cream lg:hidden">{t("popular")}</span>
+                    <span className="mb-3 mt-16 self-start rounded-full bg-terra px-3 py-1 font-note text-sm font-bold text-cream lg:hidden">{t("popular")}</span>
 
                     {/* ديسكتوب: الكلمة بالدايرة والسهم فوق الكارت */}
                     <span className="pointer-events-none absolute -top-10 start-1/2 z-10 hidden -translate-x-1/2 lg:block rtl:translate-x-1/2">

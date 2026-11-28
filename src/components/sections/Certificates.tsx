@@ -171,7 +171,7 @@ export function Certificates() {
   };
 
   return (
-    <section id="certificates" className="dots relative overflow-x-clip px-6 py-20 md:py-28">
+    <section id="certificates" className="dots relative overflow-x-clip px-6 py-20 md:py-0 md:pt-32 lg:pt-36">
       <div className="mx-auto max-w-6xl">
         <div className="flex items-start justify-between gap-4 sm:gap-6">
           <div className="min-w-0">

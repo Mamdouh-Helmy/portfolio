@@ -84,7 +84,7 @@ export function Projects() {
                 {(current.category || current.year) && <span className="font-mono text-cream/65" dir="ltr">{[current.category, current.year].filter(Boolean).join(" · ")}</span>}
               </div>
               <h3 className="font-display text-3xl leading-tight sm:text-4xl md:text-5xl">{tx(current.title)}</h3>
-              <p className="max-w-md text-sm leading-loose text-sand">{tx(current.description)}</p>
+              <p className="line-clamp-4 max-w-md text-sm leading-loose text-sand">{tx(current.description)}</p>
               <ul className="flex flex-wrap gap-2">{current.tags?.map((g) => <li key={g} className="rounded-full border border-cream/25 px-3 py-1 text-[11px] font-semibold">{g}</li>)}</ul>
               {(current.metrics?.length ?? 0) > 0 && (
                 <dl className="flex flex-wrap gap-x-8 gap-y-4 border-t border-cream/15 pt-5 sm:gap-x-10">
